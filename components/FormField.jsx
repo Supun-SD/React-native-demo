@@ -28,7 +28,10 @@ const FormField = ({
           placeholderTextColor="#7b7b8b"
           onChangeText={handleChangeText}
           keyboardType={keyboardType}
-          secureTextEntry={title === "Password" && !showPassword}
+          secureTextEntry={
+            (title === "Password" || title === "Confirm Password") &&
+            !showPassword
+          }
         />
         {(title === "Password" || title === "Confirm Password") && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>

@@ -1,17 +1,40 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { signIn } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
-  const [from, setFrom] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = () => {};
+  const { setIsLogged, setUser } = useGlobalContext();
+
+  const onSubmit = async () => {
+    if (!form.email || !form.password) {
+      Alert.alert("Error", "Please fill all the fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await signIn(form.email, form.password);
+
+      setUser(user);
+      setIsLogged(true);
+
+      router.replace("/home");
+    } catch (e) {
+      Alert.alert("Error", e.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -28,15 +51,15 @@ const SignIn = () => {
 
           <FormField
             title="Email"
-            value={from.email}
-            handleChangeText={(e) => setFrom({ ...from, email: e })}
+            value={form.email}
+            handleChangeText={(e) => setForm({ ...form, email: e })}
             otherStyles="mt-7"
             keyboardType="email-address"
           />
           <FormField
             title="Password"
-            value={from.password}
-            handleChangeText={(e) => setFrom({ ...from, password: e })}
+            value={form.password}
+            handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-7"
           />
 
