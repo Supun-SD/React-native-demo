@@ -29,10 +29,11 @@ const GlobalProvider = ({ children }) => {
     <GlobalContext.Provider
       value={{
         isLoggedIn,
-        setIsLoading,
+        setIsLoggedIn,
         user,
         setUser,
         isLoading,
+        setIsLoading,
       }}
     >
       {children}
